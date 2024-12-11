@@ -1,7 +1,7 @@
 
 # HaintSec - Web Vulnerability Analysis Tool
 
-HaintSec is a tool developed to scan and analyze the security of websites, focusing on subdomain enumeration, vulnerability scanning, open port scanning, SSL/TLS checks, and exploitation via SQL injection (using SQLMap).
+HaintSec is a tool developed to scan and analyze the security of websites, focusing on subdomain enumeration, vulnerability scanning, open port scanning, SSL/TLS checks.
 
 ## Features
 
@@ -9,7 +9,7 @@ HaintSec is a tool developed to scan and analyze the security of websites, focus
 - **Vulnerability Scanning**: Scans the website for common vulnerabilities like form-based injection points.
 - **Port Scanning**: Scans for open ports using Nmap.
 - **SSL/TLS Check**: Verifies the SSL/TLS configuration of the target.
-- **Exploitation**: Attempts to exploit SQL injection vulnerabilities using SQLMap.
+- **Exploitation**: Attempts to exploit SQL injection vulnerabilities.
 
 ## Requirements
 
