@@ -1,0 +1,7 @@
+beautifulsoup4
+requests
+python-nmap
+python-docx
+pdfkit
+argparse
+urllib3

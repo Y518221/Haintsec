@@ -1,0 +1,38 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Ignore virtual environments
+venv/
+env/
+
+# Ignore config files (you may replace this with a template config file if needed)
+config.json
+
+# Ignore log files
+*.log
+
+# Ignore IDE/editor directories
+.idea/
+.vscode/
+
+# Ignore system files (macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# Ignore generated documentation files
+*.docx
+*.pdf
+
+# Ignore compiled files (if any)
+*.o
+*.out
+*.exe
+*.dll
+
+# Ignore test output or other generated directories/files
+tests/output/
+
+# Ignore package manager files
+node_modules/
