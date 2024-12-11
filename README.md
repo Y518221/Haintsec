@@ -69,21 +69,15 @@ HaintSec is a tool developed to scan and analyze the security of websites, focus
    python haintsec.py --url exampel.com
    ```
 
-2. **Input the Target URL:**
-   When prompted, enter the target URL to analyze. For example:
-   ```bash
-   Enter the target URL (e.g., https://www.example.com): https://example.com
-   ```
-
-3. **Tool Workflow:**
+2. **Tool Workflow:**
    The tool will perform the following:
    - **Subdomain Enumeration**: Using Sublist3r, it will find any subdomains of the target URL.
    - **Vulnerability Scanning**: It will scan the website for vulnerabilities, such as form-based injections.
    - **Port Scanning**: It will scan for open ports on the target using Nmap.
    - **SSL/TLS Check**: It will verify SSL/TLS configurations.
-   - **SQL Injection Exploitation**: If any vulnerabilities are found, SQLMap will attempt to exploit them.
+   - **SQL Injection Exploitation**: If any vulnerabilities are found.
 
-4. **Reports:**
+3. **Reports:**
    After the analysis, the tool generates two reports:
    - **Word Document** (`.docx`)
    - **PDF Report** (`.pdf`)
