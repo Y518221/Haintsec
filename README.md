@@ -49,12 +49,6 @@ HaintSec is a tool developed to scan and analyze the security of websites, focus
      pip install -r requirements.txt
      ```
 
-   - **SQLMap**: Download and set up SQLMap:
-     ```bash
-     git clone https://github.com/sqlmapproject/sqlmap.git
-     cd sqlmap
-     ```
-
    - **Nmap**: Ensure you have Nmap installed. For example, on Ubuntu:
      ```bash
      sudo apt install nmap
