@@ -15,7 +15,6 @@ HaintSec is a tool developed to scan and analyze the security of websites, focus
 
 - Python 3.x
 - **Sublist3r** (for subdomain enumeration)
-- **SQLMap** (for SQL injection testing)
 - **Nmap** (for network port scanning)
 - **PDFKit** (for generating PDF reports)
 - **BeautifulSoup** (for HTML parsing)
