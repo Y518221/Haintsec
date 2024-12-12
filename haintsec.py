@@ -1,3 +1,17 @@
+
+"""
+Loads configuration values from a JSON file and sets default values if not provided.
+Handles errors if the configuration file is missing or improperly formatted.
+Checks and installs missing Python packages required for the tool.
+Automatically installs dependencies and restarts the script if necessary.
+Ensures that required external tools (e.g., Nmap, SQLMap, Sublist3r) are installed and accessible in the system PATH.
+Logs and prints errors if any tools are missing.
+The main entry point for the HaintSec tool.
+Handles pre-run checks, parses command-line arguments, and orchestrates scanning operations.
+
+"""
+
+
 import os
 import time
 import json
@@ -7,12 +21,13 @@ import logging
 import subprocess
 import sys
 import importlib
-
+from colorama import Fore, Style
 from utils.subdomain import enumerate_subdomains
 from utils.vulnerability import scan_website
 from utils.ports import scan_ports
 from utils.ssl_check import check_ssl
 from utils.report import generate_report
+from utils.sqlmap_scan import run_sqlmap
 
 # --- Configuration ---
 AUTHOR_NAME = "Yassine Selmi"
@@ -36,7 +51,7 @@ def load_config():
         "SUBDOMAIN_TOOL": "sublist3r",
         "WKHTMLTOPDF_TOOL": shutil.which("wkhtmltopdf"),
         "OUTPUT_DIR": "reports",
-        "PROXY": None  # Default to None if not provided
+        "PROXY": None
     }
     if os.path.exists(CONFIG_FILE):
         try:
@@ -45,7 +60,7 @@ def load_config():
                 default_config.update(user_config)
         except Exception as e:
             logging.error(f"Error loading config file: {e}. Using default configuration.")
-            print(f"[!] Error loading config file: {e}. Using default configuration.")
+            print(f"{Fore.RED}[!] Error loading config file: {e}. Using default configuration.{Style.RESET_ALL}")
     return default_config
 
 CONFIG = load_config()
@@ -56,10 +71,7 @@ if not os.path.exists(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)
 
 def install_python_dependencies():
-    """
-    Automatically install missing Python dependencies and notify the user.
-    """
-    print("[*] Checking Python dependencies...")
+    print(f"{Fore.BLUE}[*] Checking Python dependencies...{Style.RESET_ALL}")
     required_packages = {
         "beautifulsoup4": "bs4",
         "requests": "requests",
@@ -71,7 +83,6 @@ def install_python_dependencies():
     }
     missing_packages = []
 
-    # Check for missing packages
     for package, module in required_packages.items():
         try:
             importlib.import_module(module)
@@ -79,20 +90,17 @@ def install_python_dependencies():
             missing_packages.append(package)
 
     if missing_packages:
-        print(f"[!] Missing packages detected: {', '.join(missing_packages)}")
-        print("[*] Attempting to install missing packages...")
+        print(f"{Fore.RED}[!] Missing packages detected: {', '.join(missing_packages)}{Style.RESET_ALL}")
         try:
             subprocess.run([sys.executable, "-m", "pip", "install"] + missing_packages, check=True)
-            print("[*] Installation completed.")
-            print("[*] Restarting tool...")
+            print(f"{Fore.GREEN}[*] Installation completed. Restarting tool...{Style.RESET_ALL}")
             subprocess.run([sys.executable, __file__] + sys.argv)
             sys.exit()
         except Exception as e:
-            print(f"[!] Failed to install packages: {e}")
+            print(f"{Fore.RED}[!] Failed to install packages: {e}{Style.RESET_ALL}")
             sys.exit(1)
     else:
-        print("[*] All Python dependencies are satisfied.")
-
+        print(f"{Fore.GREEN}[*] All Python dependencies are satisfied.{Style.RESET_ALL}")
 
 def validate_tools():
     missing_tools = []
@@ -102,92 +110,65 @@ def validate_tools():
         missing_tools.append("Sublist3r")
     if not shutil.which(CONFIG.get("WKHTMLTOPDF_TOOL", "")):
         missing_tools.append("wkhtmltopdf")
+    if not shutil.which(CONFIG.get("SQLMAP_PATH", "")):
+        missing_tools.append("SQLMap")
 
     if missing_tools:
         logging.error(f"Missing required tools: {', '.join(missing_tools)}")
-        print(f"[!] Missing required tools: {', '.join(missing_tools)}")
-        print("Please install the missing tools and ensure they are available in the PATH.")
+        print(f"{Fore.RED}[!] Missing required tools: {', '.join(missing_tools)}. Please install them.{Style.RESET_ALL}")
         exit(1)
+    else:
+        print(f"{Fore.GREEN}[*] All required tools are available.{Style.RESET_ALL}")
 
 def validate_config():
-    """
-    Ensure configuration values are valid and report issues.
-    """
-    print("[*] Validating configuration...")
+    print(f"{Fore.BLUE}[*] Validating configuration...{Style.RESET_ALL}")
     for key, value in CONFIG.items():
-        if key != "PROXY" and not value:  # Skip validation for optional PROXY
-            print(f"[!] Missing configuration: {key}. Check the {CONFIG_FILE} file.")
+        if key != "PROXY" and not value:
+            print(f"{Fore.RED}[!] Missing configuration: {key}.{Style.RESET_ALL}")
             exit(1)
-    print("[*] Configuration is valid.")
+    print(f"{Fore.GREEN}[*] Configuration is valid.{Style.RESET_ALL}")
 
 def display_banner():
-    print("=" * 99)
-    print(" " * 35 + "HaintSec")
-    print("=" * 99)
+    print(f"{Fore.MAGENTA}{'=' * 99}{Style.RESET_ALL}")
+    print(f"{Fore.CYAN}{' ' * 35}HaintSec{Style.RESET_ALL}")
+    print(f"{Fore.MAGENTA}{'=' * 99}{Style.RESET_ALL}")
     print(f"Tool Developed by: {AUTHOR_NAME}")
     print(f"GitHub: {GITHUB_URL}")
     print(f"LinkedIn: {LINKEDIN_URL}")
-    print("=" * 99)
+    print(f"{Fore.MAGENTA}{'=' * 99}{Style.RESET_ALL}")
 
 def main():
-    # Display the banner when the tool starts
     display_banner()
-
-    # Pre-run checks
     install_python_dependencies()
     validate_tools()
     validate_config()
 
-    # Setup argument parsing for the target URL
     parser = argparse.ArgumentParser(description="HaintSec Vulnerability Scanner")
     parser.add_argument("--url", required=True, help="Target URL (e.g., https://www.example.com)")
     args = parser.parse_args()
     url = args.url.strip()
 
-    # Validate URL
     if not url.startswith(("http://", "https://")):
-        print("[!] URL must start with http:// or https://. Prepending https://")
+        print(f"{Fore.YELLOW}[!] URL must start with http:// or https://. Prepending https://{Style.RESET_ALL}")
         url = "https://" + url
 
-    print("=" * 99)
-    print(f"Scanning target: {url}")
-    print("=" * 99)
-
-    # Measure the start time for performance tracking
     start_time = time.time()
-
     try:
-        # Step 1: Subdomain Enumeration
-        print("[*] Starting subdomain enumeration...")
         subdomains = enumerate_subdomains(url)
-        logging.info("Subdomain enumeration completed.")
-
-        # Step 2: Vulnerability Scanning
-        print("[*] Scanning for vulnerabilities...")
         vulnerabilities = scan_website(url)
-        logging.info("Vulnerability scanning completed.")
-
-        # Step 3: Port Scanning
-        print("[*] Performing port scanning...")
         open_ports = scan_ports(url)
-        logging.info("Port scanning completed.")
-
-        # Step 4: SSL/TLS Check
-        print("[*] Checking SSL/TLS configuration...")
         ssl_issues = check_ssl(url)
-        logging.info("SSL/TLS check completed.")
+        sqlmap_results = run_sqlmap(url, CONFIG.get("SQLMAP_PATH"))
 
-        # Step 5: Generate Report
-        print("[*] Generating report...")
-        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues)
+        # Save results in the report
+        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues, sqlmap_results)
         logging.info(f"Reports generated: {report_docx}, {report_pdf}")
 
-        # Output the result
-        print(f"Reports saved as: {report_docx}, {report_pdf}")
-        print(f"Total execution time: {time.time() - start_time:.2f} seconds")
+        print(f"{Fore.GREEN}[*] Reports saved as: {report_docx}, {report_pdf}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}[*] Total execution time: {time.time() - start_time:.2f} seconds{Style.RESET_ALL}")
     except Exception as e:
         logging.error(f"An error occurred: {e}")
-        print(f"[!] An error occurred: {e}")
+        print(f"{Fore.RED}[!] An error occurred: {e}{Style.RESET_ALL}")
 
 if __name__ == "__main__":
     main()

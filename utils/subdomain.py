@@ -1,3 +1,9 @@
+
+"""
+Enumerates subdomains for a given domain using Sublist3r.
+Returns a list of discovered subdomains or logs an error if the process fails.
+"""
+
 from urllib.parse import urlparse
 import subprocess
 import sys

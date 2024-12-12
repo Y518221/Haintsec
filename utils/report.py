@@ -1,3 +1,8 @@
+"""
+Generates a comprehensive vulnerability report in both DOCX and PDF formats.
+Includes sections for subdomains, vulnerabilities, open ports, SSL/TLS issues, and SQLMap results.
+"""
+
 from docx import Document
 import pdfkit
 from datetime import datetime

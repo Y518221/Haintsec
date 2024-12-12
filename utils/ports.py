@@ -1,3 +1,9 @@
+
+"""
+Performs a port scan on the target domain using Nmap.
+Returns a dictionary mapping hosts to their open ports, or logs errors if the scan fails.
+"""
+
 import nmap
 from urllib.parse import urlparse
 import logging
