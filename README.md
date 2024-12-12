@@ -1,6 +1,7 @@
 
 # HaintSec - Vulnerability Scanner
 
+<<<<<<< HEAD
 HaintSec is a security vulnerability scanner that helps identify potential security issues in websites. The tool runs several tests such as subdomain enumeration, vulnerability scanning, port scanning, SSL certificate validation, and SQL injection testing. It generates detailed reports in DOCX and PDF formats.
 
 ### Author:
@@ -18,9 +19,21 @@ HaintSec is a security vulnerability scanner that helps identify potential secur
 - **SSL Check**: Verifies SSL certificate validity and identifies potential issues.
 - **SQL Injection Testing**: Uses SQLMap to detect SQL injection vulnerabilities.
 - **Report Generation**: Generates comprehensive DOCX and PDF reports with all findings.
+=======
+HaintSec is a tool developed to scan and analyze the security of websites, focusing on subdomain enumeration, vulnerability scanning, open port scanning, SSL/TLS checks.
+
+## Features
+
+- **Subdomain Enumeration**: Enumerates subdomains of the target URL using Sublist3r.
+- **Vulnerability Scanning**: Scans the website for common vulnerabilities like form-based injection points.
+- **Port Scanning**: Scans for open ports using Nmap.
+- **SSL/TLS Check**: Verifies the SSL/TLS configuration of the target.
+- **Exploitation**: Attempts to exploit SQL injection vulnerabilities.
+>>>>>>> 52b0bf423653119163cdf9fa03b1aa73105173ef
 
 ---
 
+<<<<<<< HEAD
 ## Prerequisites
 
 ### Python Dependencies
@@ -45,6 +58,14 @@ The following external tools are required for full functionality:
 The tool will check if these tools are installed and available in your system's PATH.
 
 ---
+=======
+- Python 3.x
+- **Sublist3r** (for subdomain enumeration)
+- **Nmap** (for network port scanning)
+- **PDFKit** (for generating PDF reports)
+- **BeautifulSoup** (for HTML parsing)
+- **requests** (for HTTP requests)
+>>>>>>> 52b0bf423653119163cdf9fa03b1aa73105173ef
 
 ## Installation
 
@@ -66,12 +87,35 @@ Make sure the following tools are installed and accessible in your system’s PA
 - **wkhtmltopdf**: Install from [wkhtmltopdf.org](https://wkhtmltopdf.org/downloads.html).
 - **SQLMap**: Install from [SQLMap GitHub](https://github.com/sqlmapproject/sqlmap).
 
+<<<<<<< HEAD
 ---
+=======
+### 3. Install External Tools:
+   - **Sublist3r**: Install Sublist3r (for subdomain enumeration):
+     ```bash
+     git clone https://github.com/aboul3la/Sublist3r.git
+     cd Sublist3r
+     pip install -r requirements.txt
+     ```
+
+   - **Nmap**: Ensure you have Nmap installed. For example, on Ubuntu:
+     ```bash
+     sudo apt install nmap
+     ```
+
+   - **PDFKit & wkhtmltopdf**: Install PDFKit and `wkhtmltopdf` (required for PDF report generation):
+     - Install `wkhtmltopdf` from [here](https://wkhtmltopdf.org/downloads.html) based on your OS.
+     - Install PDFKit:
+       ```bash
+       pip install pdfkit
+       ```
+>>>>>>> 52b0bf423653119163cdf9fa03b1aa73105173ef
 
 ## Usage
 
 To run the **HaintSec** scanner, use the following command:
 
+<<<<<<< HEAD
 ```bash
 python haintsec.py --url <TARGET_URL>
 ```
@@ -81,6 +125,20 @@ python haintsec.py --url <TARGET_URL>
 ```bash
 python haintsec.py --url https://www.example.com
 ```
+=======
+2. **Tool Workflow:**
+   The tool will perform the following:
+   - **Subdomain Enumeration**: Using Sublist3r, it will find any subdomains of the target URL.
+   - **Vulnerability Scanning**: It will scan the website for vulnerabilities, such as form-based injections.
+   - **Port Scanning**: It will scan for open ports on the target using Nmap.
+   - **SSL/TLS Check**: It will verify SSL/TLS configurations.
+   - **SQL Injection Exploitation**: If any vulnerabilities are found.
+
+3. **Reports:**
+   After the analysis, the tool generates two reports:
+   - **Word Document** (`.docx`)
+   - **PDF Report** (`.pdf`)
+>>>>>>> 52b0bf423653119163cdf9fa03b1aa73105173ef
 
 **Arguments:**
 - `--url`: The target URL you want to scan (e.g., `https://www.example.com`).
