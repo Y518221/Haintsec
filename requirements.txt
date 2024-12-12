@@ -5,3 +5,4 @@ python-docx
 pdfkit
 argparse
 urllib3
+colorama
