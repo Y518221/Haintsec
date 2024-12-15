@@ -5,10 +5,7 @@ python-docx
 pdfkit
 argparse
 urllib3
-<<<<<<< HEAD
 colorama
 playwright
 sublist3r
-=======
-colorama
->>>>>>> 9ceddb0a317de2c87f423d9d78196cc67ff45890
+setuptools
