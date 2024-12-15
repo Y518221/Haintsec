@@ -82,7 +82,10 @@ haintsec --url <TARGET_URL>
 ```bash
 haintsec --url https://www.example.com
 ```
-
+OR 
+```bash
+python haintsec.py --url https://www.example.com
+```
 **Arguments:**
 - `--url`: The target URL you want to scan (e.g., `https://www.example.com`).
 
