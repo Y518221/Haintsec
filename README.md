@@ -57,6 +57,7 @@ cd HaintSec
 ### 2. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
+pip install .
 ```
 
 ### 3. Ensure the required external tools are installed:
@@ -73,13 +74,13 @@ Make sure the following tools are installed and accessible in your system’s PA
 To run the **HaintSec** scanner, use the following command:
 
 ```bash
-python haintsec.py --url <TARGET_URL>
+haintsec --url <TARGET_URL>
 ```
 
 ### Example:
 
 ```bash
-python haintsec.py --url https://www.example.com
+haintsec --url https://www.example.com
 ```
 
 **Arguments:**
