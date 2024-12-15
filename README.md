@@ -57,6 +57,7 @@ cd HaintSec
 ### 2. Install Python dependencies:
 ```bash
 pip install -r requirements.txt
+pip install .
 ```
 
 ### 3. Ensure the required external tools are installed:
