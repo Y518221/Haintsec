@@ -21,9 +21,9 @@ setup(
         'urllib3',
     ],
     author="Yassine Selmi",
-    author_email="yassineselmi629@gmail.com",  # Add your email if you want
+    author_email="yassineselmi629@gmail.com",
     description="A web vulnerability testing tool for scanning and reporting website weaknesses.",
-    long_description=open('README.md').read(),  # Ensure README.md exists
+    long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url="https://github.com/Y518221/HaintSec",
     classifiers=[
