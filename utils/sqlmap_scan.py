@@ -1,3 +1,19 @@
+# HaintSec - SQLMap Integration Module
+#
+# Purpose:
+# This file is a module of the HaintSec vulnerability scanner tool, responsible for integrating SQLMap functionality. 
+# SQLMap is an automated tool used to detect and exploit SQL injection vulnerabilities in web applications.
+#
+# Key Functionalities:
+# - Executes SQLMap against a target URL.
+# - Captures and returns results from SQLMap for further processing or reporting.
+# - Provides real-time feedback and error handling during the execution of SQLMap.
+#
+# Dependencies:
+# - SQLMap: Ensure the tool is installed and accessible in the system PATH or specify its path in the configuration.
+# - Python Libraries: Requires `subprocess` for process handling and `colorama` for colored terminal output.
+
+
 import subprocess
 from colorama import Fore, Style
 

@@ -1,3 +1,8 @@
+"""
+Analyzes the SSL/TLS configuration of a website.
+Checks for common issues like certificate expiration, self-signed certificates, or connection errors.
+"""
+
 import ssl
 import socket
 from urllib.parse import urlparse

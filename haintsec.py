@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 """
 Loads configuration values from a JSON file and sets default values if not provided.
 Handles errors if the configuration file is missing or improperly formatted.
@@ -11,23 +11,26 @@ Handles pre-run checks, parses command-line arguments, and orchestrates scanning
 
 """
 
-
-import os
-import time
-import json
 import argparse
-import shutil
+from colorama import Fore, Style, init
+import time
 import logging
-import subprocess
 import sys
+import subprocess
+import shutil
 import importlib
-from colorama import Fore, Style
+import json
+import os
+
 from utils.subdomain import enumerate_subdomains
 from utils.vulnerability import scan_website
 from utils.ports import scan_ports
 from utils.ssl_check import check_ssl
 from utils.report import generate_report
 from utils.sqlmap_scan import run_sqlmap
+
+# Initialize colorama
+init(autoreset=True)
 
 # --- Configuration ---
 AUTHOR_NAME = "Yassine Selmi"
@@ -154,14 +157,66 @@ def main():
 
     start_time = time.time()
     try:
+        print(f"{Fore.CYAN}{'=' * 99}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}Scanning target: {url}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{'=' * 99}{Style.RESET_ALL}")
+        
+        # Subdomain enumeration
+        print(f"{Fore.BLUE}[*] Starting subdomain enumeration...{Style.RESET_ALL}")
         subdomains = enumerate_subdomains(url)
-        vulnerabilities = scan_website(url)
+        if subdomains:
+            print(f"{Fore.BLUE}[*] Found subdomains:{Style.RESET_ALL} {', '.join(subdomains)}")
+        else:
+            print(f"{Fore.YELLOW}[*] No subdomains found.{Style.RESET_ALL}")
+        print(f"{Fore.BLUE}[*] Subdomain enumeration completed.{Style.RESET_ALL}")
+
+        # Vulnerability scanning
+        print(f"{Fore.BLUE}[*] Scanning for vulnerabilities...{Style.RESET_ALL}")
+        vulnerabilities, html_content_vulnerabilities = scan_website(url)
+
+        if vulnerabilities:
+            for vuln in vulnerabilities:
+                print(f"    - {vuln['type']}: {vuln['detail']}")
+        else:
+            print("[*] No vulnerabilities detected.")
+        print(f"{Fore.BLUE}[*] Vulnerability scanning completed.{Style.RESET_ALL}")
+
+        # Port scanning
+        print(f"{Fore.BLUE}[*] Performing port scanning...{Style.RESET_ALL}")
         open_ports = scan_ports(url)
+        
+        if open_ports:
+            print("")
+            #print(f"[*] Open ports detected: {', '.join([f'{port} ({protocol})' for host, ports in open_ports.items() for port, protocol in ports.items()])}")
+        else:
+            print("[*] No open ports detected.")
+        print(f"{Fore.BLUE}[*] Port scanning completed.{Style.RESET_ALL}")
+
+        # SSL/TLS checking
+        print(f"{Fore.BLUE}[*] Checking SSL/TLS configuration...{Style.RESET_ALL}")
         ssl_issues = check_ssl(url)
+
+        if ssl_issues:
+            for issue in ssl_issues:
+                print(f"    - {issue}")
+        else:
+            print("[*] No SSL/TLS issues detected.")
+        print(f"{Fore.BLUE}[*] SSL/TLS check completed.{Style.RESET_ALL}")
+
+        # SQLMap scanning
+        print(f"{Fore.BLUE}[*] Running SQLMap for advanced scanning...{Style.RESET_ALL}")
         sqlmap_results = run_sqlmap(url, CONFIG.get("SQLMAP_PATH"))
 
-        # Save results in the report
-        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues, sqlmap_results)
+        if sqlmap_results:
+            for result in sqlmap_results:
+                print(f"    - {result}")
+        else:
+            print("[*] No SQL injection vulnerabilities detected.")
+        print(f"{Fore.BLUE}[*] SQLMap scanning completed.{Style.RESET_ALL}")
+
+        # Generating report
+        print(f"{Fore.BLUE}[*] Generating report...{Style.RESET_ALL}")
+        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues, sqlmap_results, html_content_vulnerabilities)
         logging.info(f"Reports generated: {report_docx}, {report_pdf}")
 
         print(f"{Fore.GREEN}[*] Reports saved as: {report_docx}, {report_pdf}{Style.RESET_ALL}")

@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 import subprocess
 import sys
 import os
+from colorama import Fore, Style 
 
 def enumerate_subdomains(url):
     domain = urlparse(url).netloc
@@ -25,7 +26,7 @@ def enumerate_subdomains(url):
 
         # Check if the output file is created
         if result.returncode != 0:
-            print(f"[!] Error running Sublist3r: {result.stderr}")
+            print(f"{Fore.RED}[!] Error running Sublist3r: {result.stderr}{Style.RESET_ALL}")
             return subdomains
 
         # Check if the output file is created
@@ -41,11 +42,11 @@ def enumerate_subdomains(url):
         subdomains = [subdomain.strip() for subdomain in subdomains if subdomain.strip()]
 
         if not subdomains:
-            print("[*] No subdomains found.")
+            print(f"{Fore.YELLOW}[*] No subdomains found.{Style.RESET_ALL}")
         else:
-            print(f"[*] Found {len(subdomains)} subdomains.")
+            print(f"{Fore.GREEN}[*] Found {len(subdomains)} subdomains.{Style.RESET_ALL}")
 
     except Exception as e:
-        print(f"[!] Error during subdomain enumeration: {e}")
+        print(f"{Fore.RED}[!] Error during subdomain enumeration: {e}{Style.RESET_ALL}")
 
     return subdomains
