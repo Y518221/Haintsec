@@ -216,7 +216,7 @@ def main():
 
         # Generating report
         print(f"{Fore.BLUE}[*] Generating report...{Style.RESET_ALL}")
-        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues, sqlmap_results, html_content_vulnerabilities)
+        report_docx, report_pdf = generate_report(url, subdomains, vulnerabilities, open_ports, ssl_issues, sqlmap_results)
         logging.info(f"Reports generated: {report_docx}, {report_pdf}")
 
         print(f"{Fore.GREEN}[*] Reports saved as: {report_docx}, {report_pdf}{Style.RESET_ALL}")
